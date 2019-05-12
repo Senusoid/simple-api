@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.db.models import Count, Q
 
 
 class Post(models.Model):
@@ -13,13 +14,8 @@ class Post(models.Model):
 
     @property
     def votes_stats(self):
-        return {
-            'likes': self.votes.filter(value=Vote.LIKE).count(),
-            'dislikes': self.votes.filter(value=Vote.DISLIKE).count(),
-        }
-
-
-
+        return self.votes.aggregate(like=Count('id', filter=Q(value=Vote.LIKE)),
+                                    dislike=Count('id', filter=Q(value=Vote.DISLIKE)))
 
 class Vote(models.Model):
     class Meta:
