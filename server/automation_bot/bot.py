@@ -1,11 +1,11 @@
 import os
 import random
 import string
+import sys
 
 import requests
 
-from automation_bot import config_file
-
+import config_file
 
 class ContentGenerator:
     email_domain = '@email.com'
@@ -91,10 +91,13 @@ def main():
 
 
 if __name__ == '__main__':
-    # print(os.getenv("DJANGO_SETTINGS_MODULE"))
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.append(BASE_DIR)
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
+
     import django
     django.setup()
+
     from apps.posts.models import Post
 
     main()
