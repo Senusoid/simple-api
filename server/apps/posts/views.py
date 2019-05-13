@@ -11,10 +11,14 @@ from rest_framework import permissions
 class PostsViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostsSerializer
+    create_serializer_class = PostCreateSerializer
     permission_classes = (permissions.IsAuthenticated, )
 
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return self.create_serializer_class
+
+        return self.serializer_class
 
     @swagger_auto_schema(
         methods=['post', 'delete'],

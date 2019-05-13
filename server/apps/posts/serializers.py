@@ -15,11 +15,17 @@ class PostsSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         data['is_voted'] = instance.votes.filter(user=user).exists()
 
+        return data
 
 class PostCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ('title', 'text')
+        fields = ('id', 'title', 'text')
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        post = Post.objects.create(user=user, **validated_data)
+        return post
 
 
 class VoteSerializer(serializers.Serializer):
