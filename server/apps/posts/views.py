@@ -1,8 +1,9 @@
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .models import Post, Vote
-from .serializers import PostsSerializer
+from .serializers import PostsSerializer, VoteSerializer, PostCreateSerializer
 from rest_framework import viewsets, status
 from rest_framework import permissions
 
@@ -15,6 +16,11 @@ class PostsViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+    @swagger_auto_schema(
+        methods=['post', 'delete'],
+        operation_description='like/dislike/unlike',
+        request_body=VoteSerializer
+    )
     @action(detail=True, methods=['post', 'delete'])
     def vote(self, request, pk):
         user, value = request.user, request.data.get('value')
