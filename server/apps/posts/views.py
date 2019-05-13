@@ -6,12 +6,20 @@ from .models import Post, Vote
 from .serializers import PostsSerializer, VoteSerializer, PostCreateSerializer
 from rest_framework import viewsets, status
 from rest_framework import permissions
+from rest_framework.pagination import PageNumberPagination
+
+
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 100
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
 
 
 class PostsViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostsSerializer
     create_serializer_class = PostCreateSerializer
+    pagination_class = StandardResultsSetPagination
     permission_classes = (permissions.IsAuthenticated, )
 
     def get_serializer_class(self):
