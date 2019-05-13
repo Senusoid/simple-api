@@ -41,7 +41,6 @@ class SimpleApi:
             response = requests.get(url=url, headers=headers)
 
         if response.status_code not in [200, 201]:
-            import pdb; pdb.set_trace()
             print(response.text)
 
         return response
